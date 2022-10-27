@@ -1,0 +1,7 @@
+
+counter/.anchor
+counter/.DS_Store
+counter/target
+counter/**/*.rs.bk
+counter/node_modules
+counter/test-ledger
