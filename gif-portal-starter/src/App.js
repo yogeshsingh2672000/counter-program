@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Connection, Keypair, SystemProgram } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
 import { Program, Provider } from "@project-serum/anchor";
 import idl from "./idl.json";
 import "./App.css";
 
 // Constants
 const baseAccount = Keypair.generate();
-const programId = idl.metadata.address;
+const programId = new PublicKey(idl.metadata.address);
 const App = () => {
+  const [counter, setCounter] = useState(null);
   const [walletAddress, setWalletAddress] = useState(null);
-  // const [wallet, setWallet] = useState(null);
 
   const connectWallet = async () => {
     const response = await window.solana.connect();
     setWalletAddress(response.publicKey.toString());
-    // setWallet(response.wallet);
   };
   const checkWalletIsConnected = async () => {
     if (window.solana.isPhantom) {
@@ -29,9 +28,7 @@ const App = () => {
     const network = "http://localhost:8899";
     const connection = new Connection(network, "processed");
 
-    const provider = new Provider(connection, walletAddress, {
-      preflightCommitment: "processed",
-    });
+    const provider = new Provider(connection, window.solana, "processed");
     return provider;
   };
 
@@ -41,7 +38,6 @@ const App = () => {
       return "provider is Empty";
     }
     const program = new Program(idl, programId, provider);
-    console.log(provider);
     try {
       await program.rpc.initialize({
         accounts: {
@@ -51,6 +47,7 @@ const App = () => {
         },
         signers: [baseAccount],
       });
+      console.log("new account is created", baseAccount.publicKey.toString());
       const account = await program.account.baseAccount.fetch(
         baseAccount.publicKey
       );
@@ -67,7 +64,12 @@ const App = () => {
   return (
     <div className="App">
       <h1>hello world</h1>
-      <button onClick={fetchCounter}>asdfasdfasdfasdfasdfasd</button>
+      <button
+        style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
+        onClick={fetchCounter}
+      >
+        asdfasdfasdfasdfasdfasd
+      </button>
     </div>
   );
 };
