@@ -1,4 +1,4 @@
-# counter-program
+# Counter Program FullStack
 
 ### Instructions for counter-program
 
