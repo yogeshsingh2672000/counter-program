@@ -42,7 +42,6 @@ const App = () => {
     }
     const program = new Program(idl, programId, provider);
     console.log(provider);
-    console.log("hello");
     try {
       await program.rpc.initialize({
         accounts: {
