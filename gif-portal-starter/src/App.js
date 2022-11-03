@@ -34,14 +34,11 @@ const App = () => {
   };
 
   const createCounter = async () => {
-    // const baseAccount = Keypair.generate();
     const provider = getProvider();
     if (!provider) {
       return "provider is Empty";
     }
-    // if (counter) {
-    //   return;
-    // }
+
     const program = new Program(idl, programId, provider);
     try {
       await program.rpc.initialize({
@@ -52,7 +49,6 @@ const App = () => {
         },
         signers: [baseAccount],
       });
-      console.log("new account is created", baseAccount.publicKey.toString());
       const account = await program.account.baseAccount.fetch(
         baseAccount.publicKey
       );
@@ -63,7 +59,6 @@ const App = () => {
   };
 
   const incrementCounter = async () => {
-    // const baseAccount = Keypair.generate();
     const provider = getProvider();
     if (!provider) {
       return "provider is Empty";
@@ -76,7 +71,6 @@ const App = () => {
           baseAccount: baseAccount.publicKey,
         },
       });
-      console.log("new account is created", baseAccount.publicKey.toString());
       const account = await program.account.baseAccount.fetch(
         baseAccount.publicKey
       );
@@ -87,7 +81,6 @@ const App = () => {
   };
 
   const decrementCounter = async () => {
-    // const baseAccount = Keypair.generate();
     const provider = getProvider();
     if (!provider) {
       return "provider is Empty";
@@ -100,7 +93,6 @@ const App = () => {
           baseAccount: baseAccount.publicKey,
         },
       });
-      console.log("new account is created", baseAccount.publicKey.toString());
       const account = await program.account.baseAccount.fetch(
         baseAccount.publicKey
       );
@@ -116,28 +108,37 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1>hello world</h1>
+      <h1>Counter: {!counter ? <span>click below</span> : counter}</h1>
       <div>
-        <button
-          style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
-          onClick={decrementCounter}
-        >
-          Decerment Counter
-        </button>
-        <button
-          style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
-          onClick={createCounter}
-        >
-          Create Counter
-        </button>
-        <button
-          style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
-          onClick={incrementCounter}
-        >
-          Incerment Counter
-        </button>
+        {!counter ? (
+          ""
+        ) : (
+          <>
+            <button
+              style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
+              onClick={decrementCounter}
+            >
+              Decrement
+            </button>
+            <button
+              style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
+              onClick={incrementCounter}
+            >
+              Increment
+            </button>
+          </>
+        )}
+        {!counter ? (
+          <button
+            style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
+            onClick={createCounter}
+          >
+            Create Counter
+          </button>
+        ) : (
+          ""
+        )}
       </div>
-      <span>Counter: {counter}</span>
     </div>
   );
 };
