@@ -5,7 +5,7 @@ import idl from "./idl.json";
 import "./App.css";
 
 // Constants
-const baseAccount = Keypair.generate();
+// const baseAccount = Keypair.generate();
 const programId = new PublicKey(idl.metadata.address);
 const App = () => {
   const [counter, setCounter] = useState(null);
@@ -33,10 +33,14 @@ const App = () => {
   };
 
   const fetchCounter = async () => {
+    const baseAccount = Keypair.generate();
     const provider = getProvider();
     if (!provider) {
       return "provider is Empty";
     }
+    // if (counter) {
+    //   return;
+    // }
     const program = new Program(idl, programId, provider);
     try {
       await program.rpc.initialize({
@@ -51,7 +55,57 @@ const App = () => {
       const account = await program.account.baseAccount.fetch(
         baseAccount.publicKey
       );
-      console.log("account: ", account);
+      setCounter(account.count.toString());
+    } catch (err) {
+      console.log("Transaction Error: ", err);
+    }
+  };
+
+  const incrementCounter = async () => {
+    const baseAccount = Keypair.generate();
+    const provider = getProvider();
+    if (!provider) {
+      return "provider is Empty";
+    }
+    const program = new Program(idl, programId, provider);
+
+    try {
+      await program.rpc.increment({
+        accounts: {
+          baseAccount: baseAccount.publicKey,
+        },
+        signers: [baseAccount],
+      });
+      console.log("new account is created", baseAccount.publicKey.toString());
+      const account = await program.account.baseAccount.fetch(
+        baseAccount.publicKey
+      );
+      setCounter(account.count.toString());
+    } catch (err) {
+      console.log("Transaction Error: ", err);
+    }
+  };
+
+  const decrementCounter = async () => {
+    const baseAccount = Keypair.generate();
+    const provider = getProvider();
+    if (!provider) {
+      return "provider is Empty";
+    }
+    const program = new Program(idl, programId, provider);
+
+    try {
+      await program.rpc.decrement({
+        accounts: {
+          baseAccount: baseAccount.publicKey,
+        },
+        signers: [baseAccount],
+      });
+      console.log("new account is created", baseAccount.publicKey.toString());
+      const account = await program.account.baseAccount.fetch(
+        baseAccount.publicKey
+      );
+      setCounter(account.count.toString());
     } catch (err) {
       console.log("Transaction Error: ", err);
     }
@@ -64,12 +118,27 @@ const App = () => {
   return (
     <div className="App">
       <h1>hello world</h1>
-      <button
-        style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
-        onClick={fetchCounter}
-      >
-        asdfasdfasdfasdfasdfasd
-      </button>
+      <div>
+        <button
+          style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
+          onClick={decrementCounter}
+        >
+          Decerment Counter
+        </button>
+        <button
+          style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
+          onClick={fetchCounter}
+        >
+          Fetch Counter
+        </button>
+        <button
+          style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
+          onClick={incrementCounter}
+        >
+          Incerment Counter
+        </button>
+      </div>
+      <span>Counter: {counter}</span>
     </div>
   );
 };
