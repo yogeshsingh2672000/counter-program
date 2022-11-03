@@ -36,12 +36,16 @@ pub struct Initialize<'info> {
 pub struct Increment<'info> {
     #[account(mut)]
     pub base_account: Account<'info, BaseAccount>,
+    // #[account(mut)]
+    // pub user: Signer<'info>,
 }
 
 #[derive(Accounts)]
 pub struct Decrement<'info> {
     #[account(mut)]
     pub base_account: Account<'info, BaseAccount>,
+    // #[account(mut)]
+    // pub user: Signer<'info>,
 }
 
 #[account]

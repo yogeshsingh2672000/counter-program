@@ -5,15 +5,16 @@ import idl from "./idl.json";
 import "./App.css";
 
 // Constants
-// const baseAccount = Keypair.generate();
 const programId = new PublicKey(idl.metadata.address);
+const baseAccount = Keypair.generate();
+
 const App = () => {
   const [counter, setCounter] = useState(null);
-  const [walletAddress, setWalletAddress] = useState(null);
+  const [wallet, setWallet] = useState(null);
 
   const connectWallet = async () => {
     const response = await window.solana.connect();
-    setWalletAddress(response.publicKey.toString());
+    setWallet(response.publicKey.toString());
   };
   const checkWalletIsConnected = async () => {
     if (window.solana.isPhantom) {
@@ -33,7 +34,7 @@ const App = () => {
   };
 
   const createCounter = async () => {
-    const baseAccount = Keypair.generate();
+    // const baseAccount = Keypair.generate();
     const provider = getProvider();
     if (!provider) {
       return "provider is Empty";
@@ -62,7 +63,7 @@ const App = () => {
   };
 
   const incrementCounter = async () => {
-    const baseAccount = Keypair.generate();
+    // const baseAccount = Keypair.generate();
     const provider = getProvider();
     if (!provider) {
       return "provider is Empty";
@@ -74,7 +75,6 @@ const App = () => {
         accounts: {
           baseAccount: baseAccount.publicKey,
         },
-        signers: [baseAccount],
       });
       console.log("new account is created", baseAccount.publicKey.toString());
       const account = await program.account.baseAccount.fetch(
@@ -87,7 +87,7 @@ const App = () => {
   };
 
   const decrementCounter = async () => {
-    const baseAccount = Keypair.generate();
+    // const baseAccount = Keypair.generate();
     const provider = getProvider();
     if (!provider) {
       return "provider is Empty";
@@ -99,7 +99,6 @@ const App = () => {
         accounts: {
           baseAccount: baseAccount.publicKey,
         },
-        signers: [baseAccount],
       });
       console.log("new account is created", baseAccount.publicKey.toString());
       const account = await program.account.baseAccount.fetch(
