@@ -6,14 +6,14 @@ import "./App.css";
 
 // Constants
 const programId = new PublicKey(idl.metadata.address);
-const baseAccount = Keypair.generate();
+const baseAccount = Keypair.generate(); // one per address
 
 const App = () => {
-  const [counter, setCounter] = useState(null);
+  const [counter, setCounter] = useState(null); // stores the counter data
   const [wallet, setWallet] = useState(null);
 
   const connectWallet = async () => {
-    const response = await window.solana.connect();
+    const response = await window.solana.connect(); // request user to connect there wallet and set wallet below
     setWallet(response.publicKey.toString());
   };
   const checkWalletIsConnected = async () => {
@@ -26,10 +26,10 @@ const App = () => {
   };
 
   const getProvider = () => {
-    const network = "http://localhost:8899";
+    const network = "http://localhost:8899"; // cluster network
     const connection = new Connection(network, "processed");
 
-    const provider = new Provider(connection, window.solana, "processed");
+    const provider = new Provider(connection, window.solana, "processed"); // connection, wallet, when did you want to get confirmation
     return provider;
   };
 
@@ -39,8 +39,9 @@ const App = () => {
       return "provider is Empty";
     }
 
-    const program = new Program(idl, programId, provider);
+    const program = new Program(idl, programId, provider); //making a bridge between onchain program and offchain code
     try {
+      // calling the initialize fucntion which is signed by the baseAccount keypair generate above and provide user wallet address whoz creating new account while calling this function, will be charged
       await program.rpc.initialize({
         accounts: {
           baseAccount: baseAccount.publicKey,
@@ -49,6 +50,8 @@ const App = () => {
         },
         signers: [baseAccount],
       });
+
+      // fetching the updated value from onchain program
       const account = await program.account.baseAccount.fetch(
         baseAccount.publicKey
       );
@@ -66,6 +69,7 @@ const App = () => {
     const program = new Program(idl, programId, provider);
 
     try {
+      // calling increment function which is automatically singed by the baseAccount and sol will be charged
       await program.rpc.increment({
         accounts: {
           baseAccount: baseAccount.publicKey,
@@ -88,6 +92,7 @@ const App = () => {
     const program = new Program(idl, programId, provider);
 
     try {
+      // calling decrement function everything is same as calling increment function
       await program.rpc.decrement({
         accounts: {
           baseAccount: baseAccount.publicKey,
