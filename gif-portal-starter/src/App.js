@@ -32,7 +32,7 @@ const App = () => {
     return provider;
   };
 
-  const fetchCounter = async () => {
+  const createCounter = async () => {
     const baseAccount = Keypair.generate();
     const provider = getProvider();
     if (!provider) {
@@ -127,9 +127,9 @@ const App = () => {
         </button>
         <button
           style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
-          onClick={fetchCounter}
+          onClick={createCounter}
         >
-          Fetch Counter
+          Create Counter
         </button>
         <button
           style={{ height: "3rem", width: "10rem", cursor: "pointer" }}
