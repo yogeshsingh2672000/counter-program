@@ -6,7 +6,7 @@ import "./App.css";
 
 // Constants
 const programId = new PublicKey(idl.metadata.address);
-const baseAccount = Keypair.generate(); // one per address
+const baseAccount = Keypair.generate(); // one KeyPair per address
 
 const App = () => {
   const [counter, setCounter] = useState(null); // stores the counter data
@@ -26,7 +26,7 @@ const App = () => {
   };
 
   const getProvider = () => {
-    const network = "http://localhost:8899"; // cluster network
+    const network = "http://localhost:8899"; // local cluster network
     const connection = new Connection(network, "processed");
 
     const provider = new Provider(connection, window.solana, "processed"); // connection, payers wallet, when did you want to get confirmation
@@ -39,16 +39,16 @@ const App = () => {
       return "provider is Empty";
     }
 
-    const program = new Program(idl, programId, provider); //making a bridge between onchain program and offchain code
+    const program = new Program(idl, programId, provider); //making a bridge between onchain program and offchain code to interact with solana program
     try {
       // calling the initialize fucntion which is signed by the baseAccount keypair generate above and provide user wallet address whoz creating new account while calling this function, will be charged
       await program.rpc.initialize({
         accounts: {
           baseAccount: baseAccount.publicKey,
-          user: provider.wallet.publicKey,
+          user: provider.wallet.publicKey, // payer whoz paying for creating an account
           systemProgram: SystemProgram.programId,
         },
-        signers: [baseAccount],
+        signers: [baseAccount], // sign using the newly account created
       });
 
       // fetching the updated value from onchain program
@@ -69,7 +69,7 @@ const App = () => {
     const program = new Program(idl, programId, provider);
 
     try {
-      // calling increment function which is automatically singed by the baseAccount and sol will be charged
+      // calling increment function which is automatically singed by the baseAccount and sol will be charged from the that user who created the new account
       await program.rpc.increment({
         accounts: {
           baseAccount: baseAccount.publicKey,
