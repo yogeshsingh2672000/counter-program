@@ -29,7 +29,7 @@ const App = () => {
     const network = "http://localhost:8899"; // cluster network
     const connection = new Connection(network, "processed");
 
-    const provider = new Provider(connection, window.solana, "processed"); // connection, wallet, when did you want to get confirmation
+    const provider = new Provider(connection, window.solana, "processed"); // connection, payers wallet, when did you want to get confirmation
     return provider;
   };
 
